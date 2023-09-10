@@ -11,8 +11,8 @@ namespace TableOfRecords.Tests
     [TestFixture]
     public class TableOfRecordsCreatorTests
     {
-        private const string path = "Table.txt";
-        
+        private const string Path = "Table.txt";
+
         [OneTimeSetUp]
         public void Setup()
         {
@@ -25,13 +25,13 @@ namespace TableOfRecords.Tests
             using var stringWriter = new StringWriter();
             Console.SetOut(stringWriter);
             TableOfRecordsCreator.WriteTable(TestCasesDataSource.ProfileBasic, stringWriter);
-            var streamWriter = new StreamWriter(path);
+            var streamWriter = new StreamWriter(Path);
             TableOfRecordsCreator.WriteTable(TestCasesDataSource.ProfileBasic, streamWriter);
             streamWriter.Close();
-            var streamReader = new StreamReader(path);
+            var streamReader = new StreamReader(Path);
             Assert.AreEqual(stringWriter.ToString(), streamReader.ReadToEnd());
             streamReader.Close();
-            File.Delete(path);
+            File.Delete(Path);
         }
 
         [Test]
@@ -40,13 +40,13 @@ namespace TableOfRecords.Tests
             using var stringWriter = new StringWriter();
             Console.SetOut(stringWriter);
             TableOfRecordsCreator.WriteTable(TestCasesDataSource.ProfileExtended, stringWriter);
-            var streamWriter = new StreamWriter(path);
+            var streamWriter = new StreamWriter(Path);
             TableOfRecordsCreator.WriteTable(TestCasesDataSource.ProfileExtended, streamWriter);
             streamWriter.Close();
-            var streamReader = new StreamReader(path);
+            var streamReader = new StreamReader(Path);
             Assert.AreEqual(stringWriter.ToString(), streamReader.ReadToEnd());
             streamReader.Close();
-            File.Delete(path);
+            File.Delete(Path);
         }
 
         [Test]
@@ -55,13 +55,13 @@ namespace TableOfRecords.Tests
             using var stringWriter = new StringWriter();
             Console.SetOut(stringWriter);
             TableOfRecordsCreator.WriteTable(TestCasesDataSource.ProfileShort, stringWriter);
-            var streamWriter = new StreamWriter(path);
+            var streamWriter = new StreamWriter(Path);
             TableOfRecordsCreator.WriteTable(TestCasesDataSource.ProfileShort, streamWriter);
             streamWriter.Close();
-            var streamReader = new StreamReader(path);
+            var streamReader = new StreamReader(Path);
             Assert.AreEqual(stringWriter.ToString(), streamReader.ReadToEnd());
             streamReader.Close();
-            File.Delete(path);
+            File.Delete(Path);
         }
 
         [Test]
