@@ -24,7 +24,59 @@ namespace TableOfRecords
         /// <exception cref="ArgumentException">Throw if <paramref name="collection"/> is empty.</exception>
         public static void WriteTable<T>(ICollection<T>? collection, TextWriter? writer)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(collection);
+            ArgumentNullException.ThrowIfNull(writer);
+
+            if (collection.Count < 1)
+            {
+                throw new ArgumentException("Collection is empty", nameof(collection));
+            }
+
+            Type type = typeof(T);
+            PropertyInfo[] propertyInfo = type.GetProperties();
+
+            List<int> columnWidth = propertyInfo.Select(property => property.Name.Length).ToList();
+
+            foreach (var item in collection)
+            {
+                for (int i = 0; i < propertyInfo.Length; i++)
+                {
+                    string propertyValue = propertyInfo[i].GetValue(item)?.ToString() ?? string.Empty;
+                    columnWidth[i] = Math.Max(columnWidth[i], propertyValue.Length);
+                }
+            }
+
+            string boundary = "+" + string.Join("+", columnWidth.Select(width => new string('-', width + 2))) + "+";
+
+            StringBuilder header = new StringBuilder("|");
+
+            for (int i = 0; i < propertyInfo.Length; i++)
+            {
+                header.Append(" " + propertyInfo[i].Name.PadRight(columnWidth[i]) + " |");
+            }
+
+            writer.WriteLine(boundary);
+            writer.WriteLine(header.ToString());
+            writer.WriteLine(boundary);
+
+            foreach (var item in collection)
+            {
+                var rowValues = propertyInfo.Select(
+                    (property, index) =>
+                    {
+                        string propertyValue = property.GetValue(item)?.ToString() ?? string.Empty;
+
+                        if (property.PropertyType == typeof(string) || property.PropertyType == typeof(char))
+                        {
+                            return propertyValue.PadRight(columnWidth[index]) + " ";
+                        }
+
+                        return propertyValue.PadLeft(columnWidth[index]) + " ";
+                    }).ToArray();
+
+                writer.WriteLine("| " + string.Join("| ", rowValues) + "|");
+                writer.WriteLine(boundary);
+            }
         }
     }
 }
